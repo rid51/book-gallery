@@ -60,8 +60,10 @@ function loadCover(i){if(coverData[i])return;coverData[i]={};
 const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){loadCover(+e.target.dataset.index);observer.unobserve(e.target)}}),{rootMargin:'250px'});
 document.querySelectorAll('.cover').forEach(c=>observer.observe(c));
 
+/* 출처 이미지를 찾아볼 폴더들 (앞에서부터 차례로 시도) */
+const IMG_DIRS=['','untitled%20folder/','../untitled%20folder/','sources/','../sources/'];
 const IMG_EXT=['JPG','jpg','jpeg','JPEG','png','PNG','webp','heic'];
-const imgCandidates=n=>{n=String(n||'');if(/^https?:\/\//i.test(n))return[n];const m=n.match(/^(.*)\.(\w+)$/);const base=m?m[1]:n;const o=m?[n]:[];IMG_EXT.forEach(e=>{const u=base+'.'+e;if(!o.includes(u))o.push(u)});return o};
+const imgCandidates=n=>{n=String(n||'');if(/^https?:\/\//i.test(n))return[n];const m=n.match(/^(.*)\.(\w+)$/);const base=m?m[1]:n;const o=[];IMG_DIRS.forEach(d=>{if(m)o.push(d+n);IMG_EXT.forEach(e=>{const u=d+base+'.'+e;if(!o.includes(u))o.push(u)})});return o};
 function openModal(i){const b=books[i],d=coverData[i]||{};
   const buy=b.koUrl?`<a class="modalbuy" href="${esc(safeUrl(b.koUrl))}" target="_blank" rel="noopener">한국어판 ↗</a>`:'';
   const si='',su=safeUrl(b.sourceUrl);
